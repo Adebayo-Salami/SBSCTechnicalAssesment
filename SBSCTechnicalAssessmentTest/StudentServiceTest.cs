@@ -12,8 +12,11 @@ namespace SBSCTechnicalAssessmentTest
         [Fact]
         public void Name_Not_LessThan_5Characters()
         {
-            var options = new Mock<DbContextOptions>();
-            SBSCDataContext context = new SBSCDataContext(options.Object);
+            var options = new DbContextOptionsBuilder<SBSCDataContext>()
+                .UseInMemoryDatabase(databaseName: "SBSC")
+                .Options;
+
+            var context = new SBSCDataContext(options);
             var studentService = new StudentService(context);
 
             SBSCTechnicalAssessmentData.Models.Student studentTest = new SBSCTechnicalAssessmentData.Models.Student()
@@ -33,8 +36,12 @@ namespace SBSCTechnicalAssessmentTest
         [Fact]
         public void FamilyName_Not_LessThan_5Characters()
         {
-            var mockedDataContext = new Mock<SBSCDataContext>();
-            var studentService = new StudentService(mockedDataContext.Object);
+            var options = new DbContextOptionsBuilder<SBSCDataContext>()
+                .UseInMemoryDatabase(databaseName: "SBSC")
+                .Options;
+
+            var context = new SBSCDataContext(options);
+            var studentService = new StudentService(context);
 
             SBSCTechnicalAssessmentData.Models.Student studentTest = new SBSCTechnicalAssessmentData.Models.Student()
             {
@@ -53,8 +60,12 @@ namespace SBSCTechnicalAssessmentTest
         [Fact]
         public void Address_Not_LessThan_10Characters()
         {
-            var mockedDataContext = new Mock<SBSCDataContext>();
-            var studentService = new StudentService(mockedDataContext.Object);
+            var options = new DbContextOptionsBuilder<SBSCDataContext>()
+                 .UseInMemoryDatabase(databaseName: "SBSC")
+                 .Options;
+
+            var context = new SBSCDataContext(options);
+            var studentService = new StudentService(context);
 
             SBSCTechnicalAssessmentData.Models.Student studentTest = new SBSCTechnicalAssessmentData.Models.Student()
             {
@@ -73,8 +84,12 @@ namespace SBSCTechnicalAssessmentTest
         [Fact]
         public void Country_Of_Origin_IsValid()
         {
-            var mockedDataContext = new Mock<SBSCDataContext>();
-            var studentService = new StudentService(mockedDataContext.Object);
+            var options = new DbContextOptionsBuilder<SBSCDataContext>()
+                .UseInMemoryDatabase(databaseName: "SBSC")
+                .Options;
+
+            var context = new SBSCDataContext(options);
+            var studentService = new StudentService(context);
 
             SBSCTechnicalAssessmentData.Models.Student studentTest = new SBSCTechnicalAssessmentData.Models.Student()
             {
@@ -93,8 +108,12 @@ namespace SBSCTechnicalAssessmentTest
         [Fact]
         public void Age_Between_18_And_25()
         {
-            var mockedDataContext = new Mock<SBSCDataContext>();
-            var studentService = new StudentService(mockedDataContext.Object);
+            var options = new DbContextOptionsBuilder<SBSCDataContext>()
+                .UseInMemoryDatabase(databaseName: "SBSC")
+                .Options;
+
+            var context = new SBSCDataContext(options);
+            var studentService = new StudentService(context);
 
             SBSCTechnicalAssessmentData.Models.Student studentTest = new SBSCTechnicalAssessmentData.Models.Student()
             {
