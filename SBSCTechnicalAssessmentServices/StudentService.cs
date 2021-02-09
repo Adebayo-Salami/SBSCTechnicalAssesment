@@ -17,13 +17,11 @@ namespace SBSCTechnicalAssessmentServices
 {
     public class StudentService : IStudentService
     {
-        private readonly IConfiguration _configuration;
         private readonly SBSCDataContext _context;
 
-        public StudentService(IConfiguration configuration, SBSCDataContext context)
+        public StudentService(SBSCDataContext context)
         {
             _context = context;
-            _configuration = configuration;
         }
 
         public bool CreateStudent(string name, string familyName, string address, string countryOfOrigin, string emailAddress, int age, bool isApproved, out string message)
