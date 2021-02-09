@@ -3,6 +3,7 @@ using Moq;
 using SBSCTechnicalAssessmentServices;
 using SBSCTechnicalAssessmentData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace SBSCTechnicalAssessmentTest
 {
@@ -11,8 +12,9 @@ namespace SBSCTechnicalAssessmentTest
         [Fact]
         public void Name_Not_LessThan_5Characters()
         {
-            var mockedDataContext = new Mock<SBSCDataContext>();
-            var studentService = new StudentService(mockedDataContext.Object);
+            var options = new Mock<DbContextOptions>();
+            SBSCDataContext context = new SBSCDataContext(options.Object);
+            var studentService = new StudentService(context);
 
             SBSCTechnicalAssessmentData.Models.Student studentTest = new SBSCTechnicalAssessmentData.Models.Student()
             {
@@ -98,7 +100,7 @@ namespace SBSCTechnicalAssessmentTest
             {
                 Name = "Test 1",
                 Address = "Address SBSC",
-                Age = 23,
+                Age = 10,
                 Approved = true,
                 CountryOfOrigin = "bag",
                 EmailAddress = "test@test.com",
