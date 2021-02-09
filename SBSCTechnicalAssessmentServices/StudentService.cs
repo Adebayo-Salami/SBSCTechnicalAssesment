@@ -87,9 +87,9 @@ namespace SBSCTechnicalAssessmentServices
                     return result;
                 }
 
-                if (!ValidateCountryOfOriginExists(countryOfOrigin))
+                if (!ValidateCountryOfOriginExists(countryOfOrigin, out string innerErr))
                 {
-                    message = "Kindly Input a valid country. " + countryOfOrigin + " is not a country.";
+                    message = "Kindly Input a valid country. " + countryOfOrigin + " is not a country. [" + innerErr + "]";
                     return result;
                 }
 
@@ -217,7 +217,7 @@ namespace SBSCTechnicalAssessmentServices
             return result;
         }
 
-        public bool UpdateStudent(Student studentInfo, out string message)
+        public bool UpdateStudent(long studentId, Student studentInfo, out string message)
         {
             bool result = false;
             message = String.Empty;
@@ -230,73 +230,75 @@ namespace SBSCTechnicalAssessmentServices
                     return result;
                 }
 
-                if (String.IsNullOrWhiteSpace(studentInfo.Name))
+                //Check If Student Object Exists in DB
+                Student student = _context.Students.FirstOrDefault(x => x.Id == studentId);
+                if(student == null)
                 {
-                    message = "Student Name is required.";
+                    message = "No Student record with the specified student ID exists.";
                     return result;
                 }
 
-                if(studentInfo.Name.Length < 5)
+                if (!String.IsNullOrWhiteSpace(studentInfo.Name))
                 {
-                    message = "Student Name must be at least 5 characters.";
-                    return result;
+                    if (studentInfo.Name.Length < 5)
+                    {
+                        message = "Student Name must be at least 5 characters.";
+                        return result;
+                    }
+                    student.Name = studentInfo.Name;
                 }
 
-                if (String.IsNullOrWhiteSpace(studentInfo.FamilyName))
+                if (!String.IsNullOrWhiteSpace(studentInfo.FamilyName))
                 {
-                    message = "Student Family Name is required.";
-                    return result;
+                    if (studentInfo.FamilyName.Length < 5)
+                    {
+                        message = "Student Family Name must be at least 5 characters.";
+                        return result;
+                    }
+                    student.FamilyName = studentInfo.FamilyName;
                 }
 
-                if (studentInfo.FamilyName.Length < 5)
+                if (!String.IsNullOrWhiteSpace(studentInfo.EmailAddress))
                 {
-                    message = "Student Family Name must be at least 5 characters.";
-                    return result;
+                    if (CheckIfEmailAlreadyExists(studentInfo.EmailAddress) && studentInfo.EmailAddress != student.EmailAddress)
+                    {
+                        message = "Apologies, an account with this email already exists.";
+                        return result;
+                    }
+                    student.EmailAddress = studentInfo.EmailAddress;
                 }
 
-                if (String.IsNullOrWhiteSpace(studentInfo.EmailAddress))
+                if (!String.IsNullOrWhiteSpace(studentInfo.Address))
                 {
-                    message = "Student Email Address Is Required.";
-                    return result;
+                    if (studentInfo.Address.Length < 10)
+                    {
+                        message = "Student Address must be at least 10 characters.";
+                        return result;
+                    }
+                    student.Address = studentInfo.Address;
                 }
 
-                if (CheckIfEmailAlreadyExists(studentInfo.EmailAddress))
+                if (!String.IsNullOrWhiteSpace(studentInfo.CountryOfOrigin))
                 {
-                    message = "Apologies, an account with this email already exists.";
-                    return result;
+                    if (!ValidateCountryOfOriginExists(studentInfo.CountryOfOrigin, out string innerErr))
+                    {
+                        message = "Kindly Input a valid country. " + studentInfo.CountryOfOrigin + " is not a country. [" + innerErr + "]";
+                        return result;
+                    }
+                    student.CountryOfOrigin = studentInfo.CountryOfOrigin;
                 }
 
-                if (String.IsNullOrWhiteSpace(studentInfo.Address))
+                if(studentInfo.Age > 0)
                 {
-                    message = "Student Address is required.";
-                    return result;
+                    if (studentInfo.Age < 18 || studentInfo.Age > 25)
+                    {
+                        message = "Student Age must be between 18 and 25.";
+                        return result;
+                    }
+                    student.Age = studentInfo.Age;
                 }
 
-                if (studentInfo.Address.Length < 10)
-                {
-                    message = "Student Address must be at least 10 characters.";
-                    return result;
-                }
-
-                if (String.IsNullOrWhiteSpace(studentInfo.CountryOfOrigin))
-                {
-                    message = "Student Country of origin is required";
-                    return result;
-                }
-
-                if (!ValidateCountryOfOriginExists(studentInfo.CountryOfOrigin))
-                {
-                    message = "Kindly Input a valid country. " + studentInfo.CountryOfOrigin + " is not a country.";
-                    return result;
-                }
-
-                if(studentInfo.Age < 18 || studentInfo.Age > 25)
-                {
-                    message = "Student Age must be between 18 and 25.";
-                    return result;
-                }
-
-                _context.Students.Update(studentInfo);
+                _context.Students.Update(student);
                 _context.SaveChanges();
                 result = true;
             }
@@ -309,14 +311,34 @@ namespace SBSCTechnicalAssessmentServices
             return result;
         }
 
-        private bool ValidateCountryOfOriginExists(string countryOfOrigin)
+        private bool ValidateCountryOfOriginExists(string countryOfOrigin, out string errMsg)
         {
             bool result = false;
+            errMsg = String.Empty;
 
             try
             {
+                string _baseUrl = "https://restcountries.eu";
 
-            } catch { }
+                System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
+                System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+                var client = new RestClient(_baseUrl);
+                var enquiryRequest = new RestRequest("rest/v2/name/" + countryOfOrigin + "?fullText=true", Method.GET);
+                enquiryRequest.AddHeader("Content-Type", "application/json");
+                enquiryRequest.AddHeader("Accept", "application/json");
+                IRestResponse<string> response = client.Execute<string>(enquiryRequest);
+                if(response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    result = response.Content != null;
+                }
+                else
+                {
+                    result = false;
+                }
+            } 
+            catch (Exception error) {
+                errMsg = error.Message;
+            }
 
             return result;
         }
