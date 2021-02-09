@@ -66,3 +66,4 @@ C:\Users\personal\OneDrive\Documents\Applications\SBSCTechnicalAssessment\SBSCTe
 C:\Users\personal\OneDrive\Documents\Applications\SBSCTechnicalAssessment\SBSCTechnicalAssessment\obj\Debug\netcoreapp3.1\SBSCTechnicalAssessment.dll
 C:\Users\personal\OneDrive\Documents\Applications\SBSCTechnicalAssessment\SBSCTechnicalAssessment\obj\Debug\netcoreapp3.1\SBSCTechnicalAssessment.pdb
 C:\Users\personal\OneDrive\Documents\Applications\SBSCTechnicalAssessment\SBSCTechnicalAssessment\obj\Debug\netcoreapp3.1\SBSCTechnicalAssessment.genruntimeconfig.cache
+C:\Users\personal\OneDrive\Documents\Applications\SBSCTechnicalAssessment\SBSCTechnicalAssessment\bin\Debug\netcoreapp3.1\RestSharp.dll

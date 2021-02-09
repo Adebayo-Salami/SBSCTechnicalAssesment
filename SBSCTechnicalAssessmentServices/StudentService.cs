@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using SBSCTechnicalAssessmentData;
+using RestSharp;
 
 namespace SBSCTechnicalAssessmentServices
 {
@@ -310,7 +311,14 @@ namespace SBSCTechnicalAssessmentServices
 
         private bool ValidateCountryOfOriginExists(string countryOfOrigin)
         {
-            throw new NotImplementedException();
+            bool result = false;
+
+            try
+            {
+
+            } catch { }
+
+            return result;
         }
 
         private bool CheckIfEmailAlreadyExists(string emailAddress)
