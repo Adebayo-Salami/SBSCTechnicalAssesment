@@ -65,13 +65,6 @@ namespace SBSCTechnicalAssessment.Controllers
         {
             Models.Response response = new Models.Response();
 
-            if (!student.IsValidEmail)
-            {
-                response.ResponseCode = "-01";
-                response.ResponseMessage = "Email Address is not valid";
-                return NotFound(new JsonResult(response));
-            }
-
             bool IsCreated = _studentService.CreateStudent(student.Name, student.FamilyName, student.Address, student.CountryOfOrigin, student.EmailAddress, student.Age, student.Approved = false, out string message);
             if (!IsCreated)
             {
@@ -94,13 +87,6 @@ namespace SBSCTechnicalAssessment.Controllers
         public IActionResult UpdateStudentInfo([FromBody] Student student, int id)
         {
             Models.Response response = new Models.Response();
-
-            if (!student.IsValidEmail)
-            {
-                response.ResponseCode = "-01";
-                response.ResponseMessage = "Email Address is not valid";
-                return NotFound(new JsonResult(response));
-            }
 
             bool IsUpdated = _studentService.UpdateStudent(id, student, out string message);
             if (!IsUpdated)

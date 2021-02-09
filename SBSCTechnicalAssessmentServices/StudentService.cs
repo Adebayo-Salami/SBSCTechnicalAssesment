@@ -108,6 +108,12 @@ namespace SBSCTechnicalAssessmentServices
                     CountryOfOrigin = countryOfOrigin,
                 };
 
+                if (!student.IsValidEmail)
+                {
+                    message = "Email Address is not valid";
+                    return result;
+                }
+
                 _context.Students.Add(student);
                 _context.SaveChanges();
                 result = true;
@@ -258,6 +264,12 @@ namespace SBSCTechnicalAssessmentServices
 
                 if (!String.IsNullOrWhiteSpace(studentInfo.EmailAddress))
                 {
+                    if (!studentInfo.IsValidEmail)
+                    {
+                        message = "Email Address is not valid";
+                        return result;
+                    }
+
                     if (CheckIfEmailAlreadyExists(studentInfo.EmailAddress) && studentInfo.EmailAddress != student.EmailAddress)
                     {
                         message = "Apologies, an account with this email already exists.";
